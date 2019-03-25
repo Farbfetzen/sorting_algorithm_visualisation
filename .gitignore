@@ -1,0 +1,17 @@
+screenshots/
+*.mp4
+*.webm
+.vscode/
+
+# R
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+# Python
+venv/
+__pycache__/
+
+# KDE directory preferences
+.directory
