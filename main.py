@@ -16,7 +16,7 @@ N_VALUES = 100
 COLUMN_WIDTH = 8
 COLUMN_HEIGHT_MULTIPLIER = 5
 UPS = 180
-UPDATE_TIME = 1 / UPS  # time between updates in seconds
+UPDATE_DELAY = 1 / UPS  # time between updates in seconds
 
 
 class Main:
@@ -82,8 +82,8 @@ class Main:
             if not self.paused:
                 self.update_timer += dt
             self.handle_input()
-            while self.update_timer >= UPDATE_TIME:
-                self.update_timer -= UPDATE_TIME
+            while self.update_timer >= UPDATE_DELAY:
+                self.update_timer -= UPDATE_DELAY
                 self.algorithm.update()
             self.draw()
             pg.display.update()
