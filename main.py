@@ -15,7 +15,7 @@ WINDOW_HEIGHT = 500
 N_VALUES = 100
 COLUMN_WIDTH = 8
 COLUMN_HEIGHT_MULTIPLIER = 5
-UPS = 300
+UPS = 180
 UPDATE_TIME = 1 / UPS  # time between updates in seconds
 
 
