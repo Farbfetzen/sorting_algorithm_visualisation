@@ -1,5 +1,4 @@
 import os
-import sys
 import random
 
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
@@ -12,15 +11,17 @@ BACKGROUND_COLOR = (255, 255, 255)
 RECT_COLOR = (50, 50, 50)
 COMPARISON_COLOR = (0, 100, 200)
 ALL_SORTED_COLOR = (0, 128, 0)
-TEXT_COLOR = (110, 110, 110)
+TEXT_COLOR = (110, 0, 110)
 WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 500
 N_VALUES = 100
 COLUMN_WIDTH = 8
 COLUMN_HEIGHT_MULTIPLIER = 5
-UPS = 180
+UPS = 300  # updates per second
 UPDATE_DELAY = 1 / UPS  # time between updates in seconds
-START_PAUSED = False
+START_PAUSED = True
+TEXT_PADDING = 2
+FONT_SIZE = 18
 
 
 class Main:
@@ -33,9 +34,15 @@ class Main:
         self.running = True
         self.update_timer = 0
         self.paused = START_PAUSED
-        self.font = pg.font.Font(None, 30)
-        self.name_text = self.font.render(algorithm_name, True, TEXT_COLOR)
         self.restart = False
+        # self.font = pg.font.Font(None, FONT_SIZE)
+        self.font = pg.font.SysFont("sans", FONT_SIZE)
+        self.name_text = self.font.render(algorithm_name, True, TEXT_COLOR)
+        self.comparisons_text = self.font.render("comparisons: ", True, TEXT_COLOR)
+        self.swaps_text = self.font.render("swaps: ", True, TEXT_COLOR)
+        self.comparisons_text_width = self.comparisons_text.get_rect().width
+        self.swaps_text_width = self.swaps_text.get_rect().width
+        self.text_height = self.name_text.get_rect().height
 
     def handle_input(self):
         for event in pg.event.get():
@@ -73,11 +80,35 @@ class Main:
                     v * COLUMN_HEIGHT_MULTIPLIER
                 )
             )
-        self.main_surface.blit(self.name_text, (2, 2))
         comparison_count_text = self.font.render(
             str(self.algorithm.comparison_count), True, TEXT_COLOR
         )
-        self.main_surface.blit(comparison_count_text, (2, 20))
+        swap_count_text = self.font.render(
+            str(self.algorithm.swaps_count), True, TEXT_COLOR
+        )
+        self.main_surface.blit(self.name_text, (TEXT_PADDING, TEXT_PADDING))
+        self.main_surface.blit(
+            self.comparisons_text,
+            (TEXT_PADDING, TEXT_PADDING + self.text_height)
+        )
+        self.main_surface.blit(
+            self.swaps_text,
+            (TEXT_PADDING, TEXT_PADDING * 2 + self.text_height * 2)
+        )
+        self.main_surface.blit(
+            comparison_count_text,
+            (
+                TEXT_PADDING + self.comparisons_text_width,
+                TEXT_PADDING + self.text_height
+            )
+        )
+        self.main_surface.blit(
+            swap_count_text,
+            (
+                TEXT_PADDING + self.swaps_text_width,
+                TEXT_PADDING * 2 + self.text_height * 2
+            )
+        )
 
     def run(self):
         clock = pg.time.Clock()
@@ -91,10 +122,6 @@ class Main:
                 self.algorithm.update()
             self.draw()
             pg.display.update()
-            if self.algorithm.is_sorted:
-                # TODO: This is only for speed tests. Remove this.
-                pg.quit()
-                sys.exit()
         return self.restart
 
 
