@@ -1,5 +1,8 @@
 import os
+import sys
 import random
+
+os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 import pygame as pg
 import sorting_algorithms
 
@@ -17,6 +20,7 @@ COLUMN_WIDTH = 8
 COLUMN_HEIGHT_MULTIPLIER = 5
 UPS = 180
 UPDATE_DELAY = 1 / UPS  # time between updates in seconds
+START_PAUSED = False
 
 
 class Main:
@@ -28,7 +32,7 @@ class Main:
         pg.display.set_caption("sorting algorithm visualisation")
         self.running = True
         self.update_timer = 0
-        self.paused = True
+        self.paused = START_PAUSED
         self.font = pg.font.Font(None, 30)
         self.name_text = self.font.render(algorithm_name, True, TEXT_COLOR)
         self.restart = False
@@ -87,6 +91,10 @@ class Main:
                 self.algorithm.update()
             self.draw()
             pg.display.update()
+            if self.algorithm.is_sorted:
+                # TODO: This is only for speed tests. Remove this.
+                pg.quit()
+                sys.exit()
         return self.restart
 
 
